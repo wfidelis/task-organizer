@@ -5,3 +5,4 @@ we should have crud funtionality on all the tasks that we have. When we need to 
 we should also have a time needed to complete task option that allows us to get tasks of a particular day that take a particular amount of time to complete eg 1. short tasks or long tasks.
 We will integrate this api with VUI i.e alexa
 
+This app will contain several other apps, it will have habbit-tracker,diary, and TO-DO apps. 
