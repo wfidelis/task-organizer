@@ -1,8 +1,0 @@
-create an api that helps me organize my tasks throughout the day.
-my app needs an inbox that takes all the tasks and i have and a description for them. It needs to have a time created as well as a time edited. 
-from here we need to move the tasks to the different days the need to be completed by, and here we use the google calendar api to allocate our tasks a day. 
-we should have crud funtionality on all the tasks that we have. When we need to have a funtionality that allows us to see all the tasks we have for a particular day eg monday.
-we should also have a time needed to complete task option that allows us to get tasks of a particular day that take a particular amount of time to complete eg 1. short tasks or long tasks.
-We will integrate this api with VUI i.e alexa
-
-This app will contain several other apps, it will have habbit-tracker,diary, and TO-DO apps. 
