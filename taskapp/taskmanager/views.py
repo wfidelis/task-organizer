@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.decorators import login_required
 from rest_framework import status
@@ -18,7 +17,14 @@ def inbox_list(request):
     if request.method == 'GET':
         all_tasks = Inbox.objects.all()
         serializer = InboxSerializer(all_tasks, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = InboxSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @login_required
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -29,21 +35,21 @@ def inbox_details(request, pk):
     try:
         task = Inbox.objects.get(pk=pk)
     except Inbox.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = InboxSerializer(task)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        serializer = InboxSerializer(all_tasks, data=data)
+        serializer = InboxSerializer(all_tasks, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors,status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
         task.delete()
-        return HttpResponse(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
