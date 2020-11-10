@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
+from django.contrib.auth.decorators import login_required
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from taskmanager.models import Inbox
 from taskmanager.serializers import InboxSerializer
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
+@api_view(['GET', 'POST'])
 def inbox_list(request):
     '''
     List all tasks in the inbox or create a new task 
@@ -16,6 +21,7 @@ def inbox_list(request):
         return JsonResponse(serializer.data, safe=False)
 
 @login_required
+@api_view(['GET', 'PUT', 'DELETE'])
 def inbox_details(request, pk):
     '''
     get, delete or update a task
