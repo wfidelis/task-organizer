@@ -1,23 +1,20 @@
-from django.shortcuts import render
-from rest_framework.parsers import JSONParser
-from django.contrib.auth.decorators import login_required
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from taskmanager.models import Inbox
 from taskmanager.serializers import InboxSerializer
+from django.http import Http404
+from rest_framework.views import APIView
 
-@api_view(['GET', 'POST'])
-def inbox_list(request):
+class InboxList(APIView):
     '''
-    List all tasks in the inbox or create a new task 
+    List all tasks in the inbox or create a new task
     '''
-    if request.method == 'GET':
+    def get(self, request, format=None):
         all_tasks = Inbox.objects.all()
         serializer = InboxSerializer(all_tasks, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = InboxSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,21 +22,22 @@ def inbox_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def inbox_details(request, pk):
+class InboxDetails(APIView):
     '''
-    get, delete or update a task
+    get, delete or update an inbox instance
     '''
-    try:
-        task = Inbox.objects.get(pk=pk)
-    except Inbox.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    def get_object(self, pk):
 
-    if request.method == 'GET':
+        try:
+            task = Inbox.objects.get(pk=pk)
+        except Inbox.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk, format=None):
         serializer = InboxSerializer(task)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk, format=None):
         data = JSONParser().parse(request)
         serializer = InboxSerializer(all_tasks, data=request.data)
         if serializer.is_valid():
@@ -47,7 +45,7 @@ def inbox_details(request, pk):
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
