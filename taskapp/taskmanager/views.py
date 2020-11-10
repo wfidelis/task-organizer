@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from taskmanager.models import Inbox
 from taskmanager.serializers import InboxSerializer
 
-
-@login_required
 @api_view(['GET', 'POST'])
 def inbox_list(request):
     '''
@@ -26,7 +24,7 @@ def inbox_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def inbox_details(request, pk):
     '''
