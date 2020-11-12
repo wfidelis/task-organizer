@@ -7,4 +7,3 @@ class Inbox(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     time_needed = models.PositiveIntegerField()
     owner = models.ForeignKey('auth.User', related_name='tasks', on_delete=models.CASCADE)
-    
